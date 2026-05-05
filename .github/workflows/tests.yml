@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ master ]
   push:
-    branches: [ master ]
+    branches: [ master, failing-test ]
 
 jobs:
   test:
@@ -13,5 +13,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Run a simple test
-      run: echo "Tests passed!"
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build
+    
+    - name: Run tests
+      run: dotnet test
