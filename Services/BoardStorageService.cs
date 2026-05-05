@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
 using PI4.Models;
 
 namespace PI4.Services
@@ -30,11 +30,8 @@ namespace PI4.Services
 
             try
             {
-                using (var stream = File.OpenRead(filePath))
-                {
-                    var serializer = new DataContractJsonSerializer(typeof(BoardState));
-                    return (BoardState)serializer.ReadObject(stream) ?? CreateDefaultState();
-                }
+                var json = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<BoardState>(json) ?? CreateDefaultState();
             }
             catch
             {
@@ -44,11 +41,8 @@ namespace PI4.Services
 
         public void Save(BoardState state)
         {
-            using (var stream = File.Create(filePath))
-            {
-                var serializer = new DataContractJsonSerializer(typeof(BoardState));
-                serializer.WriteObject(stream, state);
-            }
+            var json = JsonConvert.SerializeObject(state, Formatting.Indented);
+            File.WriteAllText(filePath, json);
         }
 
         private static BoardState CreateDefaultState()
@@ -67,14 +61,6 @@ namespace PI4.Services
                         Assignee = "Алексей",
                         Priority = "Средний",
                         DueDate = DateTime.Today.AddDays(1).ToString("dd.MM.yyyy")
-                    },
-                    new TaskCard
-                    {
-                        Title = "Собрать требования",
-                        Description = "Проверить список функций из варианта 1.",
-                        Assignee = "Мария",
-                        Priority = "Высокий",
-                        DueDate = DateTime.Today.ToString("dd.MM.yyyy")
                     }
                 }
             });

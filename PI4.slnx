@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="PI4.csproj" Id="e7c9df36-389f-4daa-9a2b-3db1135f6e5f" />
+  <Project Path="PI4.Tests/PI4.Tests.csproj" />
 </Solution>
